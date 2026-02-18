@@ -7,6 +7,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -14,6 +15,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun SettingsScreen(settingsManager: SettingsManager) {
+    val context = LocalContext.current
     val autoStart = settingsManager.autoStart.collectAsState(initial = true)
     val requireCharging = settingsManager.requireCharging.collectAsState(initial = true)
     val is24Hour = settingsManager.is24Hour.collectAsState(initial = true)
@@ -37,7 +39,14 @@ fun SettingsScreen(settingsManager: SettingsManager) {
         SettingsItem(
             title = "Auto Start on Charging",
             checked = autoStart.value,
-            onCheckedChange = { scope.launch { settingsManager.setAutoStart(it) } }
+            onCheckedChange = { 
+                scope.launch { 
+                    if (it && !PermissionsHelper.hasOverlayPermission(context)) {
+                        PermissionsHelper.requestOverlayPermission(context)
+                    }
+                    settingsManager.setAutoStart(it) 
+                } 
+            }
         )
         
         SettingsItem(

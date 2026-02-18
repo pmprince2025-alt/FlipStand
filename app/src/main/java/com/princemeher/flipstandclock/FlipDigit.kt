@@ -11,10 +11,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.text.googlefonts.Font
+import androidx.compose.ui.text.googlefonts.GoogleFont
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+
+val provider = GoogleFont.Provider(
+    providerAuthority = "com.google.android.gms.fonts",
+    providerPackage = "com.google.android.gms",
+    certificates = R.array.com_google_android_gms_fonts_certs
+)
+
+val DigitalFontFamily = FontFamily(
+    Font(
+        googleFont = GoogleFont("Share Tech Mono"),
+        fontProvider = provider
+    )
+)
 
 @Composable
 fun FlipDigit(
@@ -124,7 +136,7 @@ fun DigitHalf(
                 color = Color.White,
                 fontSize = 100.sp,
                 fontWeight = FontWeight.Bold,
-                fontFamily = FontFamily.Monospace,
+                fontFamily = DigitalFontFamily,
                 modifier = Modifier.offset(y = if (isTop) (-37).dp else 37.dp)
             )
         }
